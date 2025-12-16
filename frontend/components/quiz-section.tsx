@@ -1,55 +1,78 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Check, X } from "lucide-react"
+import { resourcesApi } from "@/lib/api"
 
 interface Question {
-  id: number
   question: string
   options: string[]
   correctAnswer: number
-  explanation: string
+  hint?: string
+  correctExplanation?: string
+  incorrectExplanation?: string
 }
 
-const questions: Question[] = [
-  {
-    id: 1,
-    question: "Which keyword is used to declare a constant in JavaScript?",
-    options: ["var", "let", "const", "final"],
-    correctAnswer: 2,
-    explanation: "'const' is used to declare constants that cannot be reassigned after initialization.",
-  },
-  {
-    id: 2,
-    question: "What is the correct syntax for an arrow function?",
-    options: ["function => {}", "() => {}", "=> function()", "function() =>"],
-    correctAnswer: 1,
-    explanation: "Arrow functions use the syntax () => {} for parameters and function body.",
-  },
-  {
-    id: 3,
-    question: "Which method adds an element to the end of an array?",
-    options: ["push()", "pop()", "shift()", "unshift()"],
-    correctAnswer: 0,
-    explanation: "The push() method adds one or more elements to the end of an array and returns the new length.",
-  },
-  {
-    id: 4,
-    question: "What does 'this' refer to in an arrow function?",
-    options: ["The global object", "The function itself", "The lexical scope", "Undefined"],
-    correctAnswer: 2,
-    explanation:
-      "Arrow functions don't have their own 'this' binding. They inherit 'this' from the parent scope (lexical scoping).",
-  },
-]
+interface QuizSectionProps {
+  resourceId: number
+  onQuizComplete?: () => void
+}
 
-export function QuizSection() {
+export function QuizSection({ resourceId, onQuizComplete }: QuizSectionProps) {
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [passingScore, setPassingScore] = useState(80)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [score, setScore] = useState(0)
-  const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>(new Array(questions.length).fill(false))
+  const [answeredQuestions, setAnsweredQuestions] = useState<boolean[]>([])
+
+  // Fetch quiz from API
+  useEffect(() => {
+    const fetchQuiz = async () => {
+      try {
+        setIsLoading(true)
+        const data = await resourcesApi.getQuiz(resourceId)
+        setQuestions(data.questions || [])
+        setPassingScore(data.passingScore || 80)
+        setAnsweredQuestions(new Array(data.questions?.length || 0).fill(false))
+      } catch (err) {
+        console.error("Failed to load quiz:", err)
+        setError("Failed to load quiz")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchQuiz()
+  }, [resourceId])
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Loading quiz...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-destructive">{error}</p>
+      </div>
+    )
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">No quiz available</p>
+      </div>
+    )
+  }
 
   const question = questions[currentQuestion]
   const isCorrect = selectedAnswer === question.correctAnswer
@@ -85,6 +108,16 @@ export function QuizSection() {
   }
 
   const allAnswered = answeredQuestions.every((answered) => answered)
+
+  // Call onQuizComplete when all questions are answered and score is passing
+  useEffect(() => {
+    if (allAnswered && questions.length > 0) {
+      const percentage = (score / questions.length) * 100
+      if (percentage >= passingScore && onQuizComplete) {
+        onQuizComplete()
+      }
+    }
+  }, [allAnswered, score, questions.length, passingScore, onQuizComplete])
 
   return (
     <div className="space-y-6">
@@ -158,7 +191,15 @@ export function QuizSection() {
           {showExplanation && (
             <div className={`p-4 rounded-lg ${isCorrect ? "bg-green-500/20" : "bg-red-500/20"}`}>
               <h4 className="font-semibold mb-2">{isCorrect ? "Correct!" : "Incorrect"}</h4>
-              <p className="text-sm text-muted-foreground">{question.explanation}</p>
+              {isCorrect && question.correctExplanation && (
+                <p className="text-sm text-muted-foreground">{question.correctExplanation}</p>
+              )}
+              {!isCorrect && question.incorrectExplanation && (
+                <p className="text-sm text-muted-foreground">{question.incorrectExplanation}</p>
+              )}
+              {!isCorrect && !question.incorrectExplanation && question.correctExplanation && (
+                <p className="text-sm text-muted-foreground">{question.correctExplanation}</p>
+              )}
             </div>
           )}
 

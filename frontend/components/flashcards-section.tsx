@@ -1,53 +1,43 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { resourcesApi } from "@/lib/api"
 
 interface Flashcard {
-  id: number
   question: string
   answer: string
 }
 
-const flashcards: Flashcard[] = [
-  {
-    id: 1,
-    question: "What is a variable in JavaScript?",
-    answer:
-      "A variable is a container for storing data values. In JavaScript, you can declare variables using var, let, or const keywords.",
-  },
-  {
-    id: 2,
-    question: "What is the difference between let and const?",
-    answer:
-      "'let' allows you to reassign values, while 'const' creates a constant reference that cannot be reassigned. Both are block-scoped.",
-  },
-  {
-    id: 3,
-    question: "What are arrow functions?",
-    answer:
-      "Arrow functions are a shorter syntax for writing function expressions. They use the => syntax and don't have their own 'this' binding.",
-  },
-  {
-    id: 4,
-    question: "What is an array in JavaScript?",
-    answer:
-      "An array is an ordered collection of values. Arrays can hold multiple values of any type and have many built-in methods for manipulation.",
-  },
-  {
-    id: 5,
-    question: "What does the map() method do?",
-    answer:
-      "The map() method creates a new array by calling a function on every element of the original array. It's commonly used for transforming data.",
-  },
-]
+interface FlashcardsSectionProps {
+  resourceId: number
+}
 
-export function FlashcardsSection() {
+export function FlashcardsSection({ resourceId }: FlashcardsSectionProps) {
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
 
-  const currentCard = flashcards[currentIndex]
+  // Fetch flashcards from API
+  useEffect(() => {
+    const fetchFlashcards = async () => {
+      try {
+        setIsLoading(true)
+        const data = await resourcesApi.getFlashcards(resourceId)
+        console.log("Fetched flashcards:", data)
+        setFlashcards(data || [])
+      } catch (err) {
+        console.error("Failed to load flashcards:", err)
+        setError("Failed to load flashcards")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchFlashcards()
+  }, [resourceId])
 
   const handleNext = () => {
     setIsFlipped(false)
@@ -62,6 +52,33 @@ export function FlashcardsSection() {
   const handleFlip = () => {
     setIsFlipped(!isFlipped)
   }
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Loading flashcards...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-destructive">{error}</p>
+      </div>
+    )
+  }
+
+  if (flashcards.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">No flashcards available</p>
+      </div>
+    )
+  }
+
+  const currentCard = flashcards[currentIndex]
 
   return (
     <div className="space-y-6">

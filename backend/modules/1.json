@@ -1,0 +1,194 @@
+{
+  "order": 1,
+  "title": "Taking Action Against Corruption",
+  "overview": "This guide was co-drafted by the members of the United Nations Office on Drugs and Crime (UNODC) YouthLED Integrity Advisory Board (2021-2023). The Board was established by UNODC in 2022, operating within the framework of the Global Resource for Anti-Corruption Education and Youth Empowerment (GRACE) initiative. The Board is composed of 25 young people from 25 countries, who recognized the need to share \"insider knowledge\" because starting anti-corruption work was often difficult.",
+  "objectives": [
+    "Collect and collate simple and easy-to-use tips so that more young people can gain knowledge about anti-corruption.",
+    "Make anti-corruption work more accessible to peers by demolishing barriers to youth engagement and participation.",
+    "Target young people who have little or no knowledge about corruption or the work of the United Nations but are interested in becoming active in their community, region, or internationally by building their own anti-corruption initiative.",
+    "Inspire and encourage young people with the belief that a better future infused with integrity is possible"
+  ],
+  "characterVideoUrl": "https://d1dqnt0gd112rm.cloudfront.net/anti/Grace1.mp4",
+  "resources": {
+    "videos": [
+      {
+        "title": "Who wrote the toolkit?",
+        "videoUrl": "https://d1dqnt0gd112rm.cloudfront.net/anti/LMvideo1.mp4",
+        "thumbnailUrl": "https://d1dqnt0gd112rm.cloudfront.net/anti/001-1.png",
+        "subtitles": []
+      },
+      {
+        "title": "Who is the toolkit for?",
+        "videoUrl": "https://d1dqnt0gd112rm.cloudfront.net/anti/LMvideo2.mp4",
+        "thumbnailUrl": "https://d1dqnt0gd112rm.cloudfront.net/anti/001-2.png",
+        "subtitles": []
+      }
+    ],
+    "flashcards": [
+      {
+        "question": "Who developed the 'Taking action against corruption' toolkit?",
+        "answer": "The United Nations Office on Drugs and Crime (UNODC) in collaboration with the YouthLED Integrity Advisory Board."
+      },
+      {
+        "question": "The UNODC established the YouthLED Integrity Advisory Board within the framework of which initiative?",
+        "answer": "The Global Resource for Anti-Corruption Education and Youth Empowerment (GRACE) initiative."
+      },
+      {
+        "question": "What is the primary target audience for this anti-corruption toolkit?",
+        "answer": "Young people with little or no knowledge about corruption who are interested in becoming active in their community."
+      },
+      {
+        "question": "According to the toolkit, what are the three common elements found in a corrupt act?",
+        "answer": "Authority (someone has power), abuse (they abuse the power), and benefit (they obtain an undue benefit)."
+      },
+      {
+        "question": "What is the only global legally binding framework to prevent and counter corruption?",
+        "answer": "The United Nations Convention against Corruption (UNCAC)."
+      },
+      {
+        "question": "What type of corruption involves offering an undue advantage to a public official to persuade them to act or stop acting in their formal capacity?",
+        "answer": "Bribery"
+      },
+      {
+        "question": "When a person entrusted with property or funds decides to keep it for themselves, this form of corruption is known as _____.",
+        "answer": "Embezzlement."
+      }
+    ],
+    "quiz": {
+      "passingScore": 80,
+      "questionsPerAttempt": 5,
+      "questions": [
+        {
+          "question": "The recommended citation for the toolkit attributes its authorship to which organization?",
+          "options": [
+            "United Nations Office on Drugs and Crime (UNODC)",
+            "The YouthLED Integrity Advisory Board",
+            "The GRACE Initiative",
+            "The General Assembly Special Session"
+          ],
+          "correctAnswer": 0,
+          "hint": "Check the formal copyright and citation acknowledgment at the beginning of the document.",
+          "correctExplanation": "The recommended citation for the publication is UNODC 2024. Taking action against corruption: A step-by-step guide by youth for youth, which attributes the authorship to the United Nations Office on Drugs and Crime (UNODC).",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "Who primarily co-drafted the *Taking action against corruption* toolkit?",
+          "options": [
+            "Academics and UNODC staff",
+            "The General Assembly Special Session Committee",
+            "Members of the UNODC YouthLED Integrity Advisory Board (2021-2023)",
+            "Non-Governmental Organizations globally"
+          ],
+          "correctAnswer": 2,
+          "hint": "The guide was developed 'by youth for youth'.",
+          "correctExplanation": "The publication was co-drafted by the members of the UNODC YouthLED Integrity Advisory Board (2021-2023).",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "The YouthLED Integrity Advisory Board was established within the framework of which UNODC initiative?",
+          "options": [
+            "The UNCAC Review Mechanism",
+            "The Rule of Law Champion Program",
+            "The Global Resource for Anti-Corruption Education and Youth Empowerment (GRACE) initiative",
+            "The UN Global Compact"
+          ],
+          "correctAnswer": 2,
+          "hint": "The Board's establishment followed a recommendation from the 2021 Youth Forum.",
+          "correctExplanation": "The YouthLED Integrity Advisory Board was established in 2022 within the framework of the Global Resource for Anti-Corruption Education and Youth Empowerment (GRACE) initiative.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "The core content of the toolkit is organized into how many fundamental steps for an anti-corruption initiative?",
+          "options": [
+            "5 steps",
+            "15 steps",
+            "10 steps",
+            "20 steps"
+          ],
+          "correctAnswer": 2,
+          "hint": "The guide's structure is titled '... Steps to an Anti-Corruption Initiative'.",
+          "correctExplanation": "The toolkit identifies 10 steps that the authors believe are fundamental to ensuring that an anti-corruption initiative is impactful and safe,.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "According to the authors, the toolkit's primary goal is to provide young people with inspiration and what kind of tips?",
+          "options": [
+            "Complex legal advice",
+            "Short and simple tips to help them get started",
+            "Exhaustive lists of all available resources",
+            "Academic definitions of global corruption"
+          ],
+          "correctAnswer": 1,
+          "hint": "The authors realized that more 'insider knowledge' was needed to make the work easier.",
+          "correctExplanation": "The YouthLED Integrity Advisory Board saw the need to collect and collate simple and easy-to-use tips so that more young people can gain knowledge about anti-corruption. The guide is designed to provide short and simple tips to help youth get started.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "The YouthLED Integrity Advisory Board was established following a recommendation from which specific event?",
+          "options": [
+            "The UN Climate Change Conference (COP)",
+            "The Youth Forum on \"Countering Corruption through Collaboration: Youth Perspectives and Engagement\" held in 2021",
+            "The UNODC Crime Congress 14",
+            "The World Conference for Women"
+          ],
+          "correctAnswer": 1,
+          "hint": "It was a special event that contributed to the General Assembly session against corruption.",
+          "correctExplanation": "The YouthLED Integrity Advisory Board was established following a recommendation from the Youth Forum on \"Countering Corruption through Collaboration: Youth Perspectives and Engagement,\" organized as a special event to directly contribute to the special session of the General Assembly against corruption held in 2021.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "At the time of application, what was the required age range for young people joining the YouthLED Integrity Advisory Board?",
+          "options": [
+            "16 to 25 years",
+            "20 to 35 years",
+            "18 to 30 years",
+            "Under 18 years"
+          ],
+          "correctAnswer": 2,
+          "hint": "The selection criteria aimed to ensure regional representation across 12 regions.",
+          "correctExplanation": "The Board is composed of young people aged between 18 and 30 at the time of application.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "The toolkit is designed primarily for which audience?",
+          "options": [
+            "Lawyers and academics specializing in the UNCAC",
+            "UNODC staff and government ministers",
+            "Young people with little or no knowledge about corruption who are interested in becoming active",
+            "High-level politicians aiming to reform national laws"
+          ],
+          "correctAnswer": 2,
+          "hint": "The guide's subtitle is 'A step-by-step guide by youth for youth.'",
+          "correctExplanation": "The toolkit is for young people with little or no knowledge about corruption, anti-corruption, youth works and the work of the United Nations, who are interested in building their own anti-corruption initiative.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "The authors created the toolkit based on the belief that what is possible?",
+          "options": [
+            "The total eradication of corruption in their lifetime",
+            "A better future infused with integrity",
+            "That technology alone can solve corruption",
+            "That corruption is just a myth"
+          ],
+          "correctAnswer": 1,
+          "hint": "This belief is explicitly stated as the ultimate goal for encouraging action.",
+          "correctExplanation": "The authors decided to share what they learned because they believe that a better future infused with integrity is possible.",
+          "incorrectExplanation": ""
+        },
+        {
+          "question": "The 2022–2024 YouthLED Integrity Advisory Board comprised young people from how many different countries?",
+          "options": [
+            "12 countries",
+            "25 countries",
+            "50 countries",
+            "190 countries"
+          ],
+          "correctAnswer": 1,
+          "hint": "The number of young people and the number of countries are the same.",
+          "correctExplanation": "The 2022–2024 YouthLED Integrity Advisory Board comprises 25 young people from 25 countries.",
+          "incorrectExplanation": ""
+        }
+      ]
+    }
+  }
+}

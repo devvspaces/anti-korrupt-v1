@@ -55,6 +55,9 @@ export default function LearningPlatform() {
     if (isAuthenticated) {
       loadModules()
       loadProgress()
+    } else {
+      // Stop loading if not authenticated
+      setIsLoading(false)
     }
   }, [isAuthenticated])
 
@@ -65,9 +68,19 @@ export default function LearningPlatform() {
     }
   }, [modules])
 
+  console.log("Rendering LearningPlatform:", {
+    isAuthenticated,
+    user,
+    modules,
+    selectedModule,
+    selectedResource,
+    progress,
+  })
+
   const loadModules = async () => {
     try {
       setIsLoading(true)
+      console.log("Loading modules...")
       const data = await modulesApi.getAll()
       setModules(data)
     } catch (error) {
@@ -143,6 +156,8 @@ export default function LearningPlatform() {
       return <div className="text-center text-muted-foreground">Loading module...</div>
     }
 
+    console.log("Rendering content for resource:", selectedResource)
+
     switch (selectedResource) {
       case "overview":
         return (
@@ -156,7 +171,6 @@ export default function LearningPlatform() {
             )}
 
             {selectedModule.objectives && selectedModule.objectives.length > 0 && (
-              <div className="grid gap-4 md:grid-cols-2">
                 <div className="glass rounded-xl p-6 space-y-2">
                   <h3 className="font-semibold text-primary">Learning Objectives</h3>
                   <ul className="space-y-2 text-sm text-muted-foreground">
@@ -164,7 +178,6 @@ export default function LearningPlatform() {
                       <li key={index}>• {objective}</li>
                     ))}
                   </ul>
-                </div>
               </div>
             )}
           </div>
@@ -259,7 +272,29 @@ export default function LearningPlatform() {
         knowledgeTokens={user?.knowledgeTokens}
       />
 
-      <div className="container mx-auto px-4 pt-24 pb-8">
+      {!isAuthenticated ? (
+        <div className="container mx-auto px-4 pt-24 pb-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="glass rounded-2xl p-8 text-center space-y-6">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                <BookOpen className="h-8 w-8 text-primary" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold">Welcome to Anti-Corruption Learning Platform</h2>
+                <p className="text-muted-foreground text-lg">
+                  Please sign in with your name to access the learning modules and track your progress.
+                </p>
+              </div>
+              <div className="pt-4">
+                <p className="text-sm text-muted-foreground">
+                  Click the "Login" button in the navigation bar above to get started.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="container mx-auto px-4 pt-24 pb-8">
         {/* Module Navigation */}
         <div className="relative mb-8">
           <Button
@@ -305,7 +340,7 @@ export default function LearningPlatform() {
         </div>
 
         {/* Main Content */}
-        <div className="grid lg:grid-cols-[280px_1fr] gap-8">
+        <div className="grid lg:grid-cols-[480px_1fr] gap-8">
           {/* Video Player Sidebar */}
           <div className="glass rounded-2xl p-4">
             <VideoPlayer videoUrl={selectedModule?.characterVideoUrl} />
@@ -333,7 +368,8 @@ export default function LearningPlatform() {
             <div className="glass rounded-2xl p-8 min-h-[600px]">{renderContent()}</div>
           </div>
         </div>
-      </div>
+        </div>
+      )}
 
       {showMindmap && <MindmapModal onClose={() => setShowMindmap(false)} />}
     </div>

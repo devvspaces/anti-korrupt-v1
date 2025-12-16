@@ -1,131 +1,98 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react"
+import { useState, useRef, useEffect } from "react";
+import { Play } from "lucide-react";
+import { resourcesApi } from "@/lib/api";
 
 interface Subtitle {
-  start: number
-  end: number
-  text: string
+  start: number;
+  end: number;
+  text: string;
 }
 
 interface Video {
-  id: number
-  title: string
-  duration: string
-  subtitles: Subtitle[]
+  id: number;
+  title: string;
+  videoUrl: string;
+  duration?: string;
+  thumbnailUrl?: string;
+  subtitles: Subtitle[];
 }
 
-const videos: Video[] = [
-  {
-    id: 1,
-    title: "Introduction to JavaScript Variables",
-    duration: "12:45",
-    subtitles: [
-      { start: 0, end: 5, text: "Welcome to this lesson on JavaScript variables." },
-      { start: 5, end: 10, text: "In JavaScript, we have three ways to declare variables: var, let, and const." },
-      { start: 10, end: 15, text: "Let's start with the 'let' keyword, which creates a block-scoped variable." },
-      { start: 15, end: 20, text: "You can reassign values to variables declared with 'let'." },
-      { start: 20, end: 25, text: "The 'const' keyword creates a constant that cannot be reassigned." },
-      { start: 25, end: 30, text: "Use 'const' by default unless you know the value will change." },
-      { start: 30, end: 35, text: "The older 'var' keyword has function scope and is generally avoided today." },
-    ],
-  },
-  {
-    id: 2,
-    title: "Understanding Functions",
-    duration: "18:30",
-    subtitles: [
-      { start: 0, end: 5, text: "Functions are reusable blocks of code in JavaScript." },
-      { start: 5, end: 10, text: "You can declare a function using the 'function' keyword." },
-      { start: 10, end: 15, text: "Arrow functions provide a more concise syntax for writing functions." },
-      { start: 15, end: 20, text: "Functions can accept parameters and return values." },
-    ],
-  },
-  {
-    id: 3,
-    title: "Working with Arrays",
-    duration: "15:20",
-    subtitles: [
-      { start: 0, end: 5, text: "Arrays are ordered collections of values in JavaScript." },
-      { start: 5, end: 10, text: "You can create arrays using square brackets." },
-      { start: 10, end: 15, text: "Arrays have many useful methods like map, filter, and reduce." },
-    ],
-  },
-]
+interface VideosSectionProps {
+  resourceId: number;
+}
 
-export function VideosSection() {
-  const [selectedVideo, setSelectedVideo] = useState(videos[0])
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration] = useState(45) // Mock duration in seconds
-  const subtitleContainerRef = useRef<HTMLDivElement>(null)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+export function VideosSection({ resourceId }: VideosSectionProps) {
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const subtitleContainerRef = useRef<HTMLDivElement>(null);
 
-  // Simulate video playback
+  // Fetch videos from API
   useEffect(() => {
-    if (isPlaying) {
-      intervalRef.current = setInterval(() => {
-        setCurrentTime((prev) => {
-          if (prev >= duration) {
-            setIsPlaying(false)
-            return duration
-          }
-          return prev + 1
-        })
-      }, 1000)
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+    const fetchVideos = async () => {
+      try {
+        setIsLoading(true);
+        console.log("Fetching videos for resource:", resourceId);
+        const data = await resourcesApi.getVideo(resourceId);
+        if (data != null || data != undefined) {
+          const videos = [{
+            ...data,
+            title: `Video Lesson for Resource ${resourceId}`,
+          }]
+          setVideos(videos);
+          console.log("Fetched videos:", videos);
+          setSelectedVideo(videos[0]);
+          // if (data.videos && data.videos.length > 0) {
+          //   setSelectedVideo(data.videos[0]);
+          // }
+        }
+      } catch (err) {
+        console.error("Failed to load videos:", err);
+        setError("Failed to load videos");
+      } finally {
+        setIsLoading(false);
       }
-    }
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-    }
-  }, [isPlaying, duration])
-
-  // Auto-scroll subtitles
-  useEffect(() => {
-    const activeIndex = selectedVideo.subtitles.findIndex((sub) => currentTime >= sub.start && currentTime < sub.end)
-    if (activeIndex !== -1 && subtitleContainerRef.current) {
-      const activeElement = subtitleContainerRef.current.children[activeIndex] as HTMLElement
-      if (activeElement) {
-        activeElement.scrollIntoView({ behavior: "smooth", block: "center" })
-      }
-    }
-  }, [currentTime, selectedVideo.subtitles])
-
-  const togglePlayPause = () => {
-    setIsPlaying(!isPlaying)
-  }
-
-  const skipBackward = () => {
-    setCurrentTime((prev) => Math.max(0, prev - 10))
-  }
-
-  const skipForward = () => {
-    setCurrentTime((prev) => Math.min(duration, prev + 10))
-  }
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentTime(Number(e.target.value))
-  }
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, "0")}`
-  }
+    };
+    fetchVideos();
+  }, [resourceId]);
 
   const handleVideoChange = (video: Video) => {
-    setSelectedVideo(video)
-    setCurrentTime(0)
-    setIsPlaying(false)
+    setSelectedVideo(video);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Loading videos...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-destructive">{error}</p>
+      </div>
+    );
+  }
+
+  if (videos.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">No videos available</p>
+      </div>
+    );
+  }
+
+  if (!selectedVideo) {
+    return null;
   }
 
   return (
@@ -139,7 +106,9 @@ export function VideosSection() {
             key={video.id}
             onClick={() => handleVideoChange(video)}
             className={`glass rounded-xl p-4 text-left transition-all ${
-              selectedVideo.id === video.id ? "ring-2 ring-primary bg-primary/10" : "hover:bg-secondary/40"
+              selectedVideo.id === video.id
+                ? "ring-2 ring-primary bg-primary/10"
+                : "hover:bg-secondary/40"
             }`}
           >
             <div className="flex items-center gap-3">
@@ -148,7 +117,9 @@ export function VideosSection() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold truncate">{video.title}</h3>
-                <p className="text-sm text-muted-foreground">{video.duration}</p>
+                <p className="text-sm text-muted-foreground">
+                  {video.duration}
+                </p>
               </div>
             </div>
           </button>
@@ -160,76 +131,33 @@ export function VideosSection() {
         <h3 className="text-lg font-semibold">{selectedVideo.title}</h3>
 
         {/* Video Display */}
-        <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden relative group">
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-primary/90 flex items-center justify-center mx-auto mb-4">
-                {isPlaying ? (
-                  <Pause className="w-10 h-10 text-primary-foreground" />
-                ) : (
-                  <Play className="w-10 h-10 text-primary-foreground ml-1" />
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground">Video Placeholder</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Video Controls */}
-        <div className="space-y-3">
-          {/* Progress Bar */}
-          <div className="space-y-1">
-            <input
-              type="range"
-              min="0"
-              max={duration}
-              value={currentTime}
-              onChange={handleSeek}
-              className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer slider"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
-          </div>
-
-          {/* Control Buttons */}
-          <div className="flex items-center justify-center gap-2">
-            <Button size="icon" variant="outline" onClick={skipBackward}>
-              <SkipBack className="w-4 h-4" />
-            </Button>
-            <Button size="icon" className="h-12 w-12" onClick={togglePlayPause}>
-              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
-            </Button>
-            <Button size="icon" variant="outline" onClick={skipForward}>
-              <SkipForward className="w-4 h-4" />
-            </Button>
-            <Button size="icon" variant="outline" className="ml-4 bg-transparent">
-              <Volume2 className="w-4 h-4" />
-            </Button>
-          </div>
+        <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden">
+          <video
+            ref={videoRef}
+            src={selectedVideo.videoUrl}
+            className="w-full h-full object-cover"
+            controls
+            playsInline
+          />
         </div>
 
         {/* Subtitles */}
-        <div className="glass rounded-lg p-4 space-y-2">
-          <h4 className="text-sm font-semibold mb-3">Subtitles</h4>
-          <div ref={subtitleContainerRef} className="space-y-2 max-h-[200px] overflow-y-auto scrollbar-thin">
-            {selectedVideo.subtitles.map((subtitle, index) => {
-              const isActive = currentTime >= subtitle.start && currentTime < subtitle.end
-              return (
-                <p
-                  key={index}
-                  className={`text-sm transition-all p-2 rounded ${
-                    isActive ? "bg-primary/20 text-primary font-medium" : "text-muted-foreground"
-                  }`}
-                >
+        {selectedVideo.subtitles && selectedVideo.subtitles.length > 0 && (
+          <div className="glass rounded-lg p-4 space-y-2">
+            <h4 className="text-sm font-semibold mb-3">Subtitles</h4>
+            <div
+              ref={subtitleContainerRef}
+              className="space-y-2 max-h-[200px] overflow-y-auto scrollbar-thin"
+            >
+              {selectedVideo.subtitles.map((subtitle, index) => (
+                <p key={index} className="text-sm text-muted-foreground p-2">
                   {subtitle.text}
                 </p>
-              )
-            })}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
-  )
+  );
 }

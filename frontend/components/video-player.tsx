@@ -1,35 +1,60 @@
 "use client"
 
-import { useState } from "react"
+import { useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Play, RotateCcw } from "lucide-react"
 
-export function VideoPlayer() {
-  const [isPlaying, setIsPlaying] = useState(false)
+interface VideoPlayerProps {
+  videoUrl?: string
+}
+
+export function VideoPlayer({ videoUrl }: VideoPlayerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const handlePlayPause = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play()
+      } else {
+        videoRef.current.pause()
+      }
+    }
+  }
+
+  const handleRestart = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0
+      videoRef.current.play()
+    }
+  }
+
+  if (!videoUrl) {
+    return (
+      <div className="space-y-4">
+        <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden flex items-center justify-center">
+          <p className="text-sm text-muted-foreground">No character video available</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4">
       <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden relative group">
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
-          <div className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center">
-            <Play className="w-12 h-12 text-primary-foreground ml-1" />
-          </div>
-        </div>
-        {!isPlaying && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button size="lg" className="rounded-full" onClick={() => setIsPlaying(true)}>
-              <Play className="w-5 h-5 mr-2" />
-              Play Video
-            </Button>
-          </div>
-        )}
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          className="w-full h-full object-cover"
+          controls
+          playsInline
+        />
       </div>
       <div className="flex gap-2">
-        <Button variant="outline" size="sm" className="flex-1 bg-transparent" onClick={() => setIsPlaying(!isPlaying)}>
+        <Button variant="outline" size="sm" className="flex-1 bg-transparent" onClick={handlePlayPause}>
           <Play className="w-4 h-4 mr-2" />
-          {isPlaying ? "Pause" : "Play"}
+          Play/Pause
         </Button>
-        <Button variant="outline" size="sm" className="flex-1 bg-transparent" onClick={() => setIsPlaying(false)}>
+        <Button variant="outline" size="sm" className="flex-1 bg-transparent" onClick={handleRestart}>
           <RotateCcw className="w-4 h-4 mr-2" />
           Restart
         </Button>

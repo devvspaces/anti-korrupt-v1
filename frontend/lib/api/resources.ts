@@ -13,6 +13,7 @@ import {
 export const resourcesApi = {
   getVideo: async (resourceId: number): Promise<Video> => {
     const response = await apiClient.get<Video>(`/resources/videos/${resourceId}`);
+    console.log("API Response for getVideo:", response.data);
     return response.data;
   },
 
